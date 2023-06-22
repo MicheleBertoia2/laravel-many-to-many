@@ -63,9 +63,12 @@ class ProjectController extends Controller
         if(array_key_exists('image_path', $form_data)){
             $form_data['image_path'] = Storage::put('uploads/', $form_data['image_path']);
         }
-        $new_project = new Project();
-        $new_project->fill($form_data);
-        $new_project->save();
+        $new_project = Project::create($form_data);
+
+        if (array_key_exists('technologies', $form_data)) {
+            $new_project->technologies()->sync($form_data['technologies']);
+        }
+
 
 
         return redirect()->route('admin.projects.show', $new_project);
